@@ -1,44 +1,66 @@
 * {
     padding: 0;
     margin: 0;
+    font-family: 'Nunito', sans-serif;
 }
 
 body {
     height: 100vh;
     width: 100vw;
-    background: black;
+    background: #171723;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
 }
 
+body::after {
+    content: "";
+    position: absolute;
+    background: linear-gradient(45deg, rgba(237, 75, 255, 0.5), rgb(75, 75, 255, 0.5));
+    width: 100%;
+    height: 25%;
+    top: 0px;
+    z-index: -1;
+}
+
+.titleSection {
+    width: 70%;
+}
+
+.appTitle {
+    color: white;
+    font-size: 60px;
+    margin-top: 50px;
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+
 .cardContainer {
     width: 70%;
     height: 75%;
-    border-radius: 25px;
-    background: rgb(63, 62, 66);
-    padding: 25px;
-    -webkit-border-radius: 25px;
-    -moz-border-radius: 25px;
-    -ms-border-radius: 25px;
-    -o-border-radius: 25px;
+    background: #24273D;
+    border-radius: 10px;
+    min-width: 800px;
+    overflow-y: scroll;
+    scrollbar-width: none;
 }
 
 .createCard {
     width: 70%;
-    height: 15%;
+    height: 10%;
     display: flex;
     justify-content: center;
     align-items: center;
+    min-height: 70px;
 }
 
 .accentButton {
     position: relative;
-    padding: 20px 30px;
+    padding: 10px 15px;
     margin: 5px;
     display: inline-block;
-    font-size: 30px;
+    font-size: 25px;
     background: rgba(75, 75, 255, 0.297);
     color: rgb(209, 209, 209);
     border: none;
@@ -53,8 +75,8 @@ body {
     content: "";
     position: absolute;
     inset: 0;
-    border-radius: 15px;
-    padding: 3px;
+    border-radius: 10px;
+    padding: 2px;
     background: linear-gradient(45deg, rgb(237, 75, 255), rgb(75, 75, 255));
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
@@ -67,29 +89,84 @@ body {
 }
 
 .accentButton:hover {
-    transition: 3ms;
-    -webkit-transition: 3ms;
-    -moz-transition: 3ms;
-    -ms-transition: 3ms;
-    -o-transition: 3ms;
+    transition: 300ms;
     background: rgba(75, 75, 255, 0.153);
 }
 
+.accentButton:active {
+    background: rgba(75, 75, 255, 0.515);
+}
+
 .card {
-    background: blue;
     width: 100%;
-    height: 20%;
+    height: 17%;
     color: white;
     display: flex;
     flex-direction: row;
     justify-content: left;
     align-items: center;
+    min-height: 110px;
 }
 
 .cardTitle {
-    font-size: 25px;
+    font-size: 40px;
+    font-weight: 500;
+    position: relative;
+}
+
+.cardTitle:after {
+    position: absolute;
+    content: '';
+    height: 1px;
+    width: 120%;
+    bottom: 15px;
+    left: 0;
+    background: white;
+    margin-bottom: -10px;
+}
+
+.cardDescription {
+    font-size: 15px;
+}
+
+.cardTags {
+    font-size: 12px;
+    display: flex;
+}
+
+.tag {
+    margin-right: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    background: linear-gradient(45deg, rgb(237, 75, 255), rgb(75, 75, 255));
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 5px;
+    color: rgb(239, 239, 239);
+    font-size: 15px;
+    font-weight: 300;
 }
 
 .cardDueDate {
-    padding: 25px;
+    width: 10%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.accentLine {
+    width: 100%;
+    height: 1px;
+    background: rgb(69, 69, 69);
+    position: relative;
+    top: 0;
+}
+
+.cardButton {
+    margin-top: 5px;
+    margin-right:1px;
+    justify-items: end;
+    font-size: 15px;
 }

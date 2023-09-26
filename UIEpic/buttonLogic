@@ -1,0 +1,44 @@
+//Open Pop up box
+$(function(){
+let pop = function(){
+    $('#screen').css({ opacity: 0.7, 'width':$(document).width(),'height':$(document).height()});
+    $('body').css({'overflow':'hidden'});
+    $('#box').css({'display': 'block'});
+}
+$('#button').click(pop);
+$(window).resize(function(){
+    $('#box').css("display") == 'block'?pop.call($('#button')):"";
+});
+});
+//Close Pop up Box 
+ $(function(){
+     let pop = function(){
+        $('#screen').css({'display': 'block', opacity: 0.7, 'width':$(document).width(),'height':$(document).height()});
+        $('body').css({'overflow':'hidden'});
+        $('#box').css({'display': 'block'}).click($(function(){
+            $(this).css('display', 'none');$('#screen').css('display', 'none')}));
+     }
+     
+     let submit =
+        $('#submitButton').click(function(){
+            $('#box').hide('fast')
+        });
+    
+     $('#submitButton').click(pop).click(submit);
+    });
+
+    $(function(){
+        var info = function(){
+            document.getElementById("boxTitleText").value;
+        }
+        $('#temp').click(alert(info));
+    })
+     
+          
+       
+           
+        
+        
+        
+       
+            

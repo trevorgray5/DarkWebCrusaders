@@ -2,9 +2,10 @@
     padding: 0;
     margin: 0;
     font-family: 'Nunito', sans-serif;
+    z-index: 1;
 }
 
-body {
+.bodyWorkAround {
     height: 100vh;
     width: 100vw;
     background: #171723;
@@ -14,14 +15,12 @@ body {
     flex-direction: column;
 }
 
-body::after {
-    content: "";
+.accentBackDrop {
     position: absolute;
     background: linear-gradient(45deg, rgba(237, 75, 255, 0.5), rgb(75, 75, 255, 0.5));
     width: 100%;
     height: 25%;
     top: 0px;
-    z-index: -1;
 }
 
 .titleSection {

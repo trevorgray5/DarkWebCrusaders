@@ -21,8 +21,21 @@ function TaskCards(props) {
         setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
     }
 
-    function editTask(task) {
+    /* 
+    * function is almost complete but only takes one character of input
+    */
+    const [editingTask, setEditingTask] = useState(null);
 
+    function editTask(taskId, updatedData) {
+        const updatedTasks = tasks.map((task) => {
+            if (task.id === taskId) {
+                return { ...task, ...updatedData };
+            }
+            return task;
+        });
+
+        setTasks(updatedTasks);
+        setEditingTask(null); // Clear editing state after editing
     }
 
     function completeTask (task) {
@@ -35,7 +48,7 @@ function TaskCards(props) {
     return (
         <section class="cardContainer">
             {tasks.map(task => (
-                <div>
+                <div key={task.id}>
                     {task.status == 'incomplete'? <div class="card">
                         <p class="cardDueDate">{task.dueDate}</p>
                         <div>
@@ -49,8 +62,8 @@ function TaskCards(props) {
                         </div>
                         {/* Add callback function to buttons below */}
                         <button class="accentButton cardButton" onClick={/*Just to test this will need changed*/() => addTask(newTask)}style={{"margin-left": "auto"}}>Complete</button>
-                        <button class="accentButton cardButton" style={{"margin-right": "0px"}}>Edit</button>
-                        <button class="accentButton cardButton" onClick={() => removeTask(task.id)}style={{"margin-right": "50px"}}>Delete</button>
+                        <button class="accentButton cardButton" onClick={() => editTask(task.id, { title: "New Title", dueDate: "New Due Date", desc: "New Description", tags: ["New Tag"] })}>Edit</button>
+                        <button class="accentButton cardButton" onClick={() => removeTask(task.id)} style={{"margin-right": "50px"}}>Delete</button>
                     </div>:  <div class="card">
                         <p class="cardDueDate" style={{"text-decoration": "line-through", "color": "gray"}}>{task.dueDate}</p>
                         <div>

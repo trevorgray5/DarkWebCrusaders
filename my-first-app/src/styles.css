@@ -106,6 +106,26 @@
     align-items: center;
     min-height: 110px;
 }
+.completed {
+    text-decoration: line-through;
+    color: gray;
+}
+.completedBackground {
+    background-color: #42a846;
+    position: relative;
+    padding: 10px 15px;
+    margin: 5px;
+    display: inline-block;
+    font-size: 25px;
+    color: rgb(209, 209, 209);
+    border: none;
+    border-radius: 13px;
+    -webkit-border-radius: 13px;
+    -moz-border-radius: 13px;
+    -ms-border-radius: 13px;
+    -o-border-radius: 13px;
+
+}
 
 .cardTitle {
     font-size: 40px;

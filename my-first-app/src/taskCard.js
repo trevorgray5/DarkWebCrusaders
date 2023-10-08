@@ -84,7 +84,7 @@ function TaskCards(props) {
                         <div className={`card ${isCompleted ? 'completed' : ''}`}>
                         {/* This is under modification, the check for editing, Nate (10/07/23)*/}
                         {editingTaskId === task.id ? ( // while status is incomplete, check for if a task is being edited or not
-                            <div>
+                            <div className="editView">
                                 <input type="text" value={editedTitle} onChange={(e) => setEditedTitle(e.target.value)} />
                                 <input type="text" value={editedDueDate} onChange={(e) => setEditedDueDate(e.target.value)} />
                                 <input type="text" value={editedDesc} onChange={(e) => setEditedDesc(e.target.value)}  />

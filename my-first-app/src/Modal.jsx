@@ -11,8 +11,8 @@ import TaskCards from "./taskCard";
       <div className={styles.centered}>
         <div className={styles.modal}>
           
-          <button className={styles.closeBtn} onClick={() => setIsOpen(false)}>
-            <RiCloseLine style={{ marginBottom: "-3px" }} />
+          <button className={styles.submitButton} style={{"margin-left": "253px"}} onClick={() => setIsOpen(false)}>
+            <RiCloseLine >Close</RiCloseLine>
           </button>
           <div className={styles.modalActions}>
             <div className={styles.actionsContainer}>

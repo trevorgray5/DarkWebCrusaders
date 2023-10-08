@@ -1,11 +1,12 @@
 import React, { useState, useEffect} from 'react'
-
+import Modal from './Modal';
 
 let newTask = {'id': 0, 'title': "Simple Task New", 'desc': "simple description", 'dueDate': "1/1/1", "tags": ['test', 'test1'], "status": "incomplete"};
 
 function TaskCards(props) {
 
     let [tasks, setTasks] = useState([{'id': 0, 'title': "Simple Task", 'desc': "simple description", 'dueDate': "1/1/1", "tags": ['test', 'test1'], "status": "incomplete"}]);
+    const [isOpen, setIsOpen] = useState(false);
 
     function addTask(task){
         // Increase the tasks' id by one to make each task unique
@@ -82,6 +83,7 @@ function TaskCards(props) {
                                 setEditedDueDate(task.dueDate);
                                 setEditedDesc(task.desc);
                                 setEditedTags(task.tags.join(', '));
+                                
                             }} style={{ "margin-left": "30px" }} >Edit</button>
                         )}
                         {/* End of prototype code Nate (10/07/23)*/}
@@ -96,7 +98,9 @@ function TaskCards(props) {
                             </div>
                         </div>
                         {/* Add callback function to buttons below */}
-                        <button class="accentButton cardButton" onClick={/*Just to test this will need changed*/() => addTask(newTask)}style={{"margin-left": "auto"}}>Complete</button>
+
+                        <button class="accentButton cardButton" style={{"margin-left": "auto"}}>Complete</button>
+
                         
                         <button class="accentButton cardButton" onClick={() => removeTask(task.id)} style={{"margin-right": "50px"}}>Delete</button>
                     </div>:  <div class="card">

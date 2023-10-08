@@ -29,14 +29,15 @@ function App() {
             <h1 className="appTitle">T a s k  M a s t e r</h1>
         </section>
         <TaskCards />
+
         <section className="createCard">
-          return (
+          
           <main>
             <button className={styles.accentButton} onClick={() => 
             {setIsOpen(true);}}>Add Task</button>
             {isOpen && <Modal setIsOpen={setIsOpen} />}
           </main>
-          );
+          
         </section>
       </div>
     </div>

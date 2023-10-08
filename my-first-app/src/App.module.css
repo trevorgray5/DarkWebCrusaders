@@ -1,0 +1,41 @@
+.accentButton {
+    position: relative;
+    padding: 10px 15px;
+    margin: 5px;
+    display: inline-block;
+    font-size: 25px;
+    background: rgba(75, 75, 255, 0.297);
+    color: rgb(209, 209, 209);
+    border: none;
+    border-radius: 13px;
+    -webkit-border-radius: 13px;
+    -moz-border-radius: 13px;
+    -ms-border-radius: 13px;
+    -o-border-radius: 13px;
+  }
+  
+  .accentButton::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 10px;
+    padding: 2px;
+    background: linear-gradient(45deg, rgb(237, 75, 255), rgb(75, 75, 255));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -ms-border-radius: 15px;
+    -o-border-radius: 15px;
+}
+
+  .accentButton:hover {
+    transition: 300ms;
+    background: rgba(75, 75, 255, 0.153);
+  }
+  
+  .accentButton:active {
+    background: rgba(75, 75, 255, 0.515);
+}

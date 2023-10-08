@@ -24,18 +24,28 @@ function TaskCards(props) {
     /* 
     * function is almost complete but only takes one character of input
     */
-    const [editingTask, setEditingTask] = useState(null);
+    const [editingTaskId, setEditingTaskId] = useState(null);
+    const [editedTitle, setEditedTitle] = useState('');
+    const [editedDueDate, setEditedDueDate] = useState('');
+    const [editedDesc, setEditedDesc] = useState('');
+    const [editedTags, setEditedTags] = useState('');
 
-    function editTask(taskId, updatedData) {
+    function editTask(taskId) {
+        const updatedData = {
+            title: editedTitle,
+            dueDate: editedDueDate,
+            desc: editedDesc,
+            tags: editedTags.split(',').map(tag => tag.trim()),
+        };
+
         const updatedTasks = tasks.map((task) => {
             if (task.id === taskId) {
                 return { ...task, ...updatedData };
             }
             return task;
         });
-
         setTasks(updatedTasks);
-        setEditingTask(null); // Clear editing state after editing
+        setEditingTaskId(null); // Clear editing state after saving changes
     }
 
     function completeTask (task) {
@@ -50,6 +60,27 @@ function TaskCards(props) {
             {tasks.map(task => (
                 <div key={task.id}>
                     {task.status == 'incomplete'? <div class="card">
+                        {/* This is under modification, the check for editing, Nate (10/07/23)*/}
+                        {editingTaskId === task.id ? ( // while status is incomplete, check for if a task is being edited or not
+                            <div>
+                                <input type="text" value={editedTitle} onChange={(e) => setEditedTitle(e.target.value)} />
+                                <input type="text" value={editedDueDate} onChange={(e) => setEditedDueDate(e.target.value)} />
+                                <input type="text" value={editedDesc} onChange={(e) => setEditedDesc(e.target.value)}  />
+                                <input type="text" value={editedTags} onChange={(e) => setEditedTags(e.target.value)} />
+
+                                <button className="accentButton cardButton" onClick={() => editTask(task.id)} style={{ "margin-right": "0px" }} >Save</button>
+                            </div>
+                        ) : (
+                            <button className="accentButton cardButton" onClick={() => {
+                                setEditingTaskId(task.id);
+                                // Populate the input fields with the current task data
+                                setEditedTitle(task.title);
+                                setEditedDueDate(task.dueDate);
+                                setEditedDesc(task.desc);
+                                setEditedTags(task.tags.join(', '));
+                            }} style={{ "margin-left": "30px" }} >Edit</button>
+                        )}
+                        {/* End of prototype code Nate (10/07/23)*/}
                         <p class="cardDueDate">{task.dueDate}</p>
                         <div>
                             <h1 class="cardTitle">{task.title}</h1>
@@ -62,7 +93,7 @@ function TaskCards(props) {
                         </div>
                         {/* Add callback function to buttons below */}
                         <button class="accentButton cardButton" onClick={/*Just to test this will need changed*/() => addTask(newTask)}style={{"margin-left": "auto"}}>Complete</button>
-                        <button class="accentButton cardButton" onClick={() => editTask(task.id, { title: "New Title", dueDate: "New Due Date", desc: "New Description", tags: ["New Tag"] })}>Edit</button>
+                        
                         <button class="accentButton cardButton" onClick={() => removeTask(task.id)} style={{"margin-right": "50px"}}>Delete</button>
                     </div>:  <div class="card">
                         <p class="cardDueDate" style={{"text-decoration": "line-through", "color": "gray"}}>{task.dueDate}</p>
@@ -77,7 +108,6 @@ function TaskCards(props) {
                         </div>
                         {/* Add callback function to buttons below */}
                         <button class="accentButton cardButton" style={{"margin-left": "auto"}}>Uncomplete</button>
-                        <button class="accentButton cardButton" style={{"margin-right": "0px"}}>Edit</button>
                         <button class="accentButton cardButton" style={{"margin-right": "50px"}}>Delete</button>
                     </div>}
                     <div class="accentLine" />

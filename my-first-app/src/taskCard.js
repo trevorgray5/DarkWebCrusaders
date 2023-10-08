@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from 'react'
-import Modal from './Modal';
+import $ from 'jquery'
 
 let newTask = {'id': 0, 'title': "Simple Task New", 'desc': "simple description", 'dueDate': "1/1/1", "tags": ['test', 'test1'], "status": "incomplete"};
 
@@ -16,7 +16,12 @@ function TaskCards(props) {
         // Increase the tasks' id by one to make each task unique
         const newId = Math.max(...tasks.map((task) => task.id), 0) + 1;
         // add task with new id to task array
-        const updatedTask = { ...newTask, id: newId };
+        const updatedTask = { ...newTask, id: newId, 
+                                          title: $('#boxTitleText').val(), 
+                                          desc: $('#boxDescriptionText').val(), 
+                                          dueDate : $('#boxDueDateText').val(),
+                                          tags : $('#boxTagsText').val().split(',').map(tag => tag.trim()),
+                                        };
         // update tasks
         setTasks((prevTasks) => prevTasks.concat(updatedTask));
     }

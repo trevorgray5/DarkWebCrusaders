@@ -83,7 +83,7 @@ function TaskCards(props) {
                                 setEditedDueDate(task.dueDate);
                                 setEditedDesc(task.desc);
                                 setEditedTags(task.tags.join(', '));
-                                {setIsOpen(true);}
+                                
                             }} style={{ "margin-left": "30px" }} >Edit</button>
                         )}
                         {/* End of prototype code Nate (10/07/23)*/}
@@ -98,7 +98,9 @@ function TaskCards(props) {
                             </div>
                         </div>
                         {/* Add callback function to buttons below */}
+
                         <button class="accentButton cardButton" style={{"margin-left": "auto"}}>Complete</button>
+
                         
                         <button class="accentButton cardButton" onClick={() => removeTask(task.id)} style={{"margin-right": "50px"}}>Delete</button>
                     </div>:  <div class="card">

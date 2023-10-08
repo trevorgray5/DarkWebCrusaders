@@ -11,6 +11,10 @@ import styles from "./App.module.css";
 
 function App() {
   const [isOpen, setIsOpen] = useState(false);
+
+  const [tasks, setTasks] = useState([
+    {'id': 0, 'title': "Simple Task", 'desc': "simple description", 'dueDate': "1/1/1", "tags": ['test', 'test1'], "status": "incomplete"}
+  ])
   
   return (
     <div className="App">

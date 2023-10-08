@@ -1,17 +1,27 @@
 import React, { useState, useEffect} from 'react'
-
+import $ from 'jquery'
 
 let newTask = {'id': 0, 'title': "Simple Task New", 'desc': "simple description", 'dueDate': "1/1/1", "tags": ['test', 'test1'], "status": "incomplete"};
 
 function TaskCards(props) {
 
     let [tasks, setTasks] = useState([{'id': 0, 'title': "Simple Task", 'desc': "simple description", 'dueDate': "1/1/1", "tags": ['test', 'test1'], "status": "incomplete"}]);
+    const [isOpen, setIsOpen] = useState(false);
+    const[currStyle, newStyle] = useState(false);
+    const changeStyle = () => {
+        newStyle(!currStyle);           
+    }
 
     function addTask(task){
         // Increase the tasks' id by one to make each task unique
         const newId = Math.max(...tasks.map((task) => task.id), 0) + 1;
         // add task with new id to task array
-        const updatedTask = { ...newTask, id: newId };
+        const updatedTask = { ...newTask, id: newId, 
+                                          title: $('#boxTitleText').val(), 
+                                          desc: $('#boxDescriptionText').val(), 
+                                          dueDate : $('#boxDueDateText').val(),
+                                          tags : $('#boxTagsText').val().split(',').map(tag => tag.trim()),
+                                        };
         // update tasks
         setTasks((prevTasks) => prevTasks.concat(updatedTask));
     }
@@ -85,6 +95,7 @@ function TaskCards(props) {
                                 setEditedDueDate(task.dueDate);
                                 setEditedDesc(task.desc);
                                 setEditedTags(task.tags.join(', '));
+                                {setIsOpen(true);}
                             }} style={{ "margin-left": "30px" }} >Edit</button>
                         )}
                         {/* End of prototype code Nate (10/07/23)*/}
@@ -92,19 +103,17 @@ function TaskCards(props) {
                         <div>
                             <h1 className={`cardTitle ${completed ? 'completed' : ''}`}>{task.title}</h1>
                             <p className={`cardDescription ${completed ? 'completed' : ''}`}>{task.desc}</p>
-                            <div class="cardTags">
-                                
+                            <div className="cardTags">
                                 {task.tags.map((tag) => (
-                                    <h2 class="tag">{tag}</h2>
+                                    <h2 className="tag">{tag}</h2>
                                 ))}
-                                
                             </div>
                         </div>
-                        <button className="accentButton cardButton" onClick={toggleCompleted} style={{"margin-left": "auto"}}>
-                                        {completed ? "Mark Incomplete" : "Complete"}
-                        </button>
+                        
                         {/* Add callback function to buttons below */}
-
+                        <button className={currStyle ? "completedBackground cardButton" : "accentButton cardButton"} onClick={() => {toggleCompleted(); changeStyle();}}
+                        style={{"margin-left": "auto"}}>{completed ? "Mark Incomplete" : "Complete"}</button>
+                        
                         
                         <button class="accentButton cardButton" onClick={() => removeTask(task.id)} style={{"margin-right": "50px"}}>Delete</button>
                     </div>:  <div class="card">

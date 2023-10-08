@@ -10,18 +10,22 @@ function TaskCards(props) {
     function addTask(task){
         setTasks(prevTasks => prevTasks.concat(newTask));
     }
+    TaskCards.addTask = addTask;
 
     function removeTask (task) {
         
     }
+    TaskCards.removeTask = removeTask;
 
     function editTask(task) {
 
     }
+    TaskCards.editTask = editTask;
 
     function completeTask (task) {
 
     }
+    TaskCards.completeTask = completeTask;
 
     useEffect(() => {
     })

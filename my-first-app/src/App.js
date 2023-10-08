@@ -23,7 +23,7 @@ function App() {
         </section>
         <TaskCards />
         <section class="createCard">
-            <button class="accentButton">Add Task</button>
+            <button class="accentButton" onClick={() => {TaskCards.addTask();}}>Add Task</button>
         </section>
       </div>
     </div>

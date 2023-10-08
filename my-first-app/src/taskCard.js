@@ -1,7 +1,7 @@
 import React, { useState, useEffect} from 'react'
 import $ from 'jquery'
 
-let newTask = {'id': 0, 'title': "Simple Task New", 'desc': "simple description", 'dueDate': "1/1/1", "tags": ['test', 'test1'], "status": "incomplete"};
+let newTask = {'id': 0, 'title': "Simple Task New", 'desc': "simple description", 'dueDate': "1/1/1", "tags": ['test', 'test1'], "status": "incomplete", 'completed' : false};
 
 function TaskCards(props) {
 
@@ -62,12 +62,16 @@ function TaskCards(props) {
     TaskCards.editTask = editTask;
 
     //Constants for card Completion button
-    const [completed, setCompleted] = useState(false);
+    const [isCompleted, setIsCompleted] = useState(false);
+
         // Function to toggle completed status
-    const toggleCompleted = () => {
-        // Toggle the completed state
-    setCompleted(!completed);
-    }
+        const toggleCompletion = (taskId) => {
+            setTasks((prevTasks) =>
+                prevTasks.map((task) =>
+                    task.id === taskId ? { ...task, completed: !task.completed } : task
+                )
+            );
+        };
 
     useEffect(() => {
     })
@@ -75,8 +79,8 @@ function TaskCards(props) {
     return (
         <section class="cardContainer">
             {tasks.map(task => (
-                <div key={task.id}>
-                    {task.status == 'incomplete'? <div className={`card ${completed ? 'completed' : ''}`}>
+                <div key={task.id} className={`card ${task.completed ? 'completed' : ''}`}>
+                    {task.status == 'incomplete'? <div className={`card ${isCompleted ? 'completed' : ''}`}>
                         {/* This is under modification, the check for editing, Nate (10/07/23)*/}
                         {editingTaskId === task.id ? ( // while status is incomplete, check for if a task is being edited or not
                             <div>
@@ -99,10 +103,10 @@ function TaskCards(props) {
                             }} style={{ "margin-left": "30px" }} >Edit</button>
                         )}
                         {/* End of prototype code Nate (10/07/23)*/}
-                        <p className={`cardDueDate ${completed ? 'completed' : ''}`}>{task.dueDate}</p>
+                        <p className={`cardDueDate ${isCompleted ? 'completed' : ''}`}>{task.dueDate}</p>
                         <div>
-                            <h1 className={`cardTitle ${completed ? 'completed' : ''}`}>{task.title}</h1>
-                            <p className={`cardDescription ${completed ? 'completed' : ''}`}>{task.desc}</p>
+                            <h1 className={`cardTitle ${isCompleted ? 'completed' : ''}`}>{task.title}</h1>
+                            <p className={`cardDescription ${isCompleted ? 'completed' : ''}`}>{task.desc}</p>
                             <div className="cardTags">
                                 {task.tags.map((tag) => (
                                     <h2 className="tag">{tag}</h2>
@@ -111,8 +115,8 @@ function TaskCards(props) {
                         </div>
                         
                         {/* Add callback function to buttons below */}
-                        <button className={currStyle ? "completedBackground cardButton" : "accentButton cardButton"} onClick={() => {toggleCompleted(); changeStyle();}}
-                        style={{"margin-left": "auto"}}>{completed ? "Mark Incomplete" : "Complete"}</button>
+                        <button className={currStyle ? "completedBackground cardButton" : "accentButton cardButton"} onClick={() => {toggleCompletion(task.id); changeStyle();}}
+                        style={{"margin-left": "50px"}}>{task.completed ? "Mark Incomplete" : "Complete"}</button>
                         
                         
                         <button class="accentButton cardButton" onClick={() => removeTask(task.id)} style={{"margin-right": "50px"}}>Delete</button>

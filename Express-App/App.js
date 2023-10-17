@@ -29,23 +29,27 @@ app.get('/',async (req, res) => {
       res.send('200');
 });
 
-app.get('/api/v1/tasks/getTasks', (req, res) => {
+app.get('/api/v1/tasks/getTasks', async (req, res) => {
+    await client.connect();
+    const collection = await client.db("darkWebCrusaders").collection("taskMaster");
+    const documents = await collection.find({}).toArray();
+    console.log(documents);
+    res.send('200');
+});
+
+app.post('/api/v1/tasks/getTaskByID', async (req, res) => {
 
 });
 
-app.get('/api/v1/tasks/getTaskByID', (req, res) => {
+app.post('/api/v1/tasks/createTask', (req, res) => {
 
 });
 
-app.get('/api/v1/tasks/createTask', (req, res) => {
+app.post('/api/v1/tasks/updateTaskByID', (req, res) => {
 
 });
 
-app.get('/api/v1/tasks/updateTaskByID', (req, res) => {
-
-});
-
-app.get('/api/v1/tasks/deleteTaskByID', (req, res) => {
+app.post('/api/v1/tasks/deleteTaskByID', (req, res) => {
 
 });
 

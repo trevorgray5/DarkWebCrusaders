@@ -62,16 +62,70 @@ app.get('/api/v1/tasks/getTaskByID/:taskID', async (req, res) => {
     res.json(documents);
 });
 
-app.put('/api/v1/tasks/createTask', (req, res) => {
-    //might bet easier to pass up json for all the normal task information then generate the ObjectId on this end then pass to mongodb
+app.post('/api/v1/tasks/createTask', async (req, res) => {
+    try {
+        const { title, desc, dueDate, tags } = req.body; // should send these parameters in the request body as JSON
+
+        await client.connect();
+        const collection = await client.db("darkWebCrusaders").collection("taskMaster");
+
+        const result = await collection.insertOne({
+            title, desc, dueDate, tags,
+            status: "incomplete",
+            completed: false
+        });
+        res.json({ success: true, message: 'Task created successfully', insertedId: result.insertedId });
+    } 
+    catch (err) {
+        res.status(500).json({ success: false, message: 'Error creating the task', error: err });
+    } finally {
+        await client.close();
+    }
 });
 
-app.put('/api/v1/tasks/updateTaskByID', (req, res) => {
-    //might also be easier to pass up the json with the ObjectID then push a mongo update the task with the given id and info received
+
+app.put('/api/v1/tasks/updateTaskByID/:taskID', async (req, res) => {
+    try {
+        const { title, desc, dueDate, tags, status, completed } = req.body; // should send these parameters in the request body as JSON
+        const obj = new ObjectId(req.params.taskID);
+
+        await client.connect();
+        const collection = await client.db("darkWebCrusaders").collection("taskMaster");
+
+        const result = await collection.updateOne({ _id: obj }, {
+            $set: { title, desc, dueDate, tags, status, completed }
+        });
+
+        if (result.modifiedCount === 1) {
+            res.json({ success: true, message: 'Task updated successfully' });
+        } else {
+            res.status(404).json({ success: false, message: 'Task not found' });
+        }
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'Error updating the task', error: err });
+    } finally {
+        await client.close();
+    }
 });
 
-app.put('/api/v1/tasks/deleteTaskByID', (req, res) => {
-    //probably could implemented like in /api/v1/tasks/getTaskByID/:taskID, since no other information is needed than just send the delete command to mongo with the id
+app.delete('/api/v1/tasks/deleteTaskByID/:taskID', async (req, res) => {
+    try {
+        await client.connect();
+        const collection = await client.db("darkWebCrusaders").collection("taskMaster");
+        const obj = new ObjectId(req.params.taskID);
+
+        const result = await collection.deleteOne({ _id: obj });
+
+        if (result.deletedCount === 1) {
+            res.json({ success: true, message: 'Task deleted successfully' });
+        } else {
+            res.status(404).json({ success: false, message: 'Task not found' });
+        }
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'Error deleting the task', error: err });
+    } finally {
+        await client.close();
+    }
 });
 
 //Server

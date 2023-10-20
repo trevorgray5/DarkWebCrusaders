@@ -1,4 +1,6 @@
 const express = require('express');
+const bodyParser = require('body-parser')
+
 const app = express();
 const port = 3000;
 
@@ -23,7 +25,6 @@ app.get('/api/v1/status',async (req, res) => {
     err = false;
     ert = ""
     try {
-        // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
@@ -45,26 +46,40 @@ app.get('/api/v1/status',async (req, res) => {
 });
 
 app.get('/api/v1/tasks/getTasks', async (req, res) => {
-    //return all the task currently outstanding
-    await client.connect();
-    const collection = await client.db("darkWebCrusaders").collection("taskMaster");
-    const documents = await collection.find({}).toArray();
-    res.json(documents);
+    try {
+        await client.connect();
+        const collection = await client.db("darkWebCrusaders").collection("taskMaster");
+        const documents = await collection.find({}).toArray();
+        res.json(documents);
+    }
+    catch (err) {
+        res.status(500).json({ success: false, message: 'Error creating the task', error: err });
+    }
+    finally {
+        await client.close();
+    }
 });
 
 app.get('/api/v1/tasks/getTaskByID/:taskID', async (req, res) => {
-    //Returns a list with a single task when passed the object hash or whatever the fuck those number are.
-    //example - http://localhost:3000/api/v1/tasks/getTaskByID/65307e05fe06afd897ca7d4b
-    await client.connect();
-    const collection = await client.db("darkWebCrusaders").collection("taskMaster");
-    obj = new ObjectId(req.params.taskID)
-    const documents = await collection.find({_id: obj}).toArray();
-    res.json(documents);
+    try {
+        await client.connect();
+        const collection = await client.db("darkWebCrusaders").collection("taskMaster");
+        obj = new ObjectId(req.params.taskID)
+        const documents = await collection.find({_id: obj}).toArray();
+        res.json(documents);
+    }
+    catch (err) {
+        res.status(500).json({ success: false, message: 'Error creating the task', error: err });
+    }
+    finally {
+        await client.close();
+    }
 });
 
+app.use(bodyParser.json())
 app.post('/api/v1/tasks/createTask', async (req, res) => {
     try {
-        const { title, desc, dueDate, tags } = req.body; // should send these parameters in the request body as JSON
+        const {title, desc, dueDate, tags} = req.body; // should send these parameters in the request body as JSON
 
         await client.connect();
         const collection = await client.db("darkWebCrusaders").collection("taskMaster");
@@ -74,25 +89,27 @@ app.post('/api/v1/tasks/createTask', async (req, res) => {
             status: "incomplete",
             completed: false
         });
-        res.json({ success: true, message: 'Task created successfully', insertedId: result.insertedId });
-    } 
+        res.json({success: true, message: 'Task created successfully', insertedId: result.insertedId});
+    }
     catch (err) {
         res.status(500).json({ success: false, message: 'Error creating the task', error: err });
-    } finally {
+    }
+    finally {
         await client.close();
     }
 });
 
-
+app.use(bodyParser.json())
 app.put('/api/v1/tasks/updateTaskByID/:taskID', async (req, res) => {
-    try {
+    //If this function seems to cause any indexing issues it might because updating a task seems to change the ID, id seems to be a hash.
+     try {
         const { title, desc, dueDate, tags, status, completed } = req.body; // should send these parameters in the request body as JSON
         const obj = new ObjectId(req.params.taskID);
 
         await client.connect();
         const collection = await client.db("darkWebCrusaders").collection("taskMaster");
 
-        const result = await collection.updateOne({ _id: obj }, {
+        const result = await collection.updateOne({ _id: obj}, {
             $set: { title, desc, dueDate, tags, status, completed }
         });
 
@@ -101,13 +118,14 @@ app.put('/api/v1/tasks/updateTaskByID/:taskID', async (req, res) => {
         } else {
             res.status(404).json({ success: false, message: 'Task not found' });
         }
-    } catch (err) {
-        res.status(500).json({ success: false, message: 'Error updating the task', error: err });
-    } finally {
-        await client.close();
-    }
+     } catch (err) {
+         res.status(500).json({ success: false, message: 'Error updating the task', error: err });
+     } finally {
+         await client.close();
+     }
 });
 
+app.use(bodyParser.json())
 app.delete('/api/v1/tasks/deleteTaskByID/:taskID', async (req, res) => {
     try {
         await client.connect();

@@ -85,12 +85,13 @@ function TaskCards(props) {
                         {/* This is under modification, the check for editing, Nate (10/07/23)*/}
                         {editingTaskId === task.id ? ( // while status is incomplete, check for if a task is being edited or not
                             <div className="editView">
-                                <input type="text" value={editedTitle} onChange={(e) => setEditedTitle(e.target.value)} />
-                                <input type="text" value={editedDueDate} onChange={(e) => setEditedDueDate(e.target.value)} />
-                                <input type="text" value={editedDesc} onChange={(e) => setEditedDesc(e.target.value)}  />
-                                <input type="text" value={editedTags} onChange={(e) => setEditedTags(e.target.value)} />
-
                                 <button className="accentButton cardButton" onClick={() => editTask(task.id)} style={{ "margin-right": "0px" }} >Save</button>
+                                <div className="editFields">
+                                    <input className="editInput" type="text" value={editedTitle} onChange={(e) => setEditedTitle(e.target.value)} />
+                                    <input className="editInput" type="text" value={editedDueDate} onChange={(e) => setEditedDueDate(e.target.value)} />
+                                    <input className="editInput" type="text" value={editedDesc} onChange={(e) => setEditedDesc(e.target.value)}  />
+                                    <input className="editInput" type="text" value={editedTags} onChange={(e) => setEditedTags(e.target.value)} />
+                                </div>
                             </div>
                         ) : (
                             <button className="accentButton cardButton" onClick={() => {

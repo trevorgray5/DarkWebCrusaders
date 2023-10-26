@@ -17,9 +17,7 @@ const client = new MongoClient(uri, {
   });
 
 // Eventually could be used to serv our react app to prevent needing two web services / daemons
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'reactBuild/index.html'));
-});
+app.use(express.static("reactBuild"));
 
 app.get('/api/v1/status',async (req, res) => {
     err = false;
@@ -66,10 +64,14 @@ app.get('/api/v1/tasks/getTaskByID/:taskID', async (req, res) => {
         const collection = await client.db("darkWebCrusaders").collection("taskMaster");
         obj = new ObjectId(req.params.taskID)
         const documents = await collection.find({_id: obj}).toArray();
-        res.json(documents);
+        if (documents.length < 1) {
+            res.status(404).json({ success: false, message: 'Task not found' });
+        } else {
+            res.json(documents[0]);
+        }
     }
     catch (err) {
-        res.status(500).json({ success: false, message: 'Error creating the task', error: err });
+        res.status(500).json({ success: false, message: 'Error getting task', error: err });
     }
     finally {
         await client.close();

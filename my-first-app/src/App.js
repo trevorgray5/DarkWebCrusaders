@@ -11,6 +11,7 @@ import styles from "./App.module.css";
 
 function App() {
   const [isOpen, setIsOpen] = useState(false);
+  App.baseAPI = "http://localhost:3000";
 
   const [tasks, setTasks] = useState([
     {'id': 0, 'title': "Simple Task", 'desc': "simple description", 'dueDate': "1/1/1", "tags": ['test', 'test1'], "status": "incomplete"}

@@ -1,8 +1,14 @@
 const express = require('express');
 const bodyParser = require('body-parser')
+const cors = require('cors')
 
 const app = express();
 const port = 3000;
+
+let corsOptions = {
+    origin : ['http://localhost:3000', 'http://localhost:3001'],
+}
+app.use(cors(corsOptions))
 
 const { MongoClient, ObjectId, ServerApiVersion } = require('mongodb');
 const uri = "mongodb+srv://tgray27:sabercatsb-ball8@darkwebcrusaders.jdxzgjk.mongodb.net/?retryWrites=true&w=majority";
@@ -51,7 +57,7 @@ app.get('/api/v1/tasks/getTasks', async (req, res) => {
         res.json(documents);
     }
     catch (err) {
-        res.status(500).json({ success: false, message: 'Error creating the task', error: err });
+        res.status(500).json({ success: false, message: 'Error passing tasks', error: err });
     }
     finally {
         await client.close();

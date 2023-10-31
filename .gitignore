@@ -1,4 +1,4 @@
-/my-first-app/node_modules/*
-/my-first-app/build/*
-/Express-App/node_modules/*
+my-first-app/node_modules
+my-first-app/build
+Express-App/node_modules
 node_modules

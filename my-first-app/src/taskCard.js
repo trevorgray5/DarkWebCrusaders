@@ -67,6 +67,28 @@ function TaskCards(props) {
     }
     TaskCards.editTask = editTask;
 
+    function loadingData () {
+        const [data, setData] = useState(null);
+
+        useEffect(() => {
+            fetch(App.baseAPI + "/api/v1/tasks/getTasks")
+            .then((response) => response.json())
+            .then((data) => {
+                setData(data);
+            })
+            .catch((error) => {
+                console.error('Error fetching data: ', error);
+            });
+        }, []);
+
+        if (data === null) {
+            return 
+            <div>
+                <img src="/TaskMaster_Logo.png" alt="Loading..." />
+            </div>
+        }
+    }
+
     //Constants for card Completion button
     const [isCompleted, setIsCompleted] = useState(false);
 
@@ -179,6 +201,7 @@ function TaskCards(props) {
                     <div className="accentLine" />
                 </div>
             ))}
+            <loadingData />
         </section>
     );
 }

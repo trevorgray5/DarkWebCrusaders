@@ -39,9 +39,6 @@ function TaskCards(props) {
     }
     TaskCards.removeTask = removeTask;
 
-    /* 
-    * function is almost complete but only takes one character of input
-    */
     const [editingTaskId, setEditingTaskId] = useState(null);
     const [editedTitle, setEditedTitle] = useState('');
     const [editedDueDate, setEditedDueDate] = useState('');
@@ -88,6 +85,15 @@ function TaskCards(props) {
                             },
                             body: JSON.stringify(newTaskData)
                         })
+                        /* Start of DELETE integration -- UNDER CONSTRUCTION
+                        fetch(App.baseAPI + "/api/v1/tasks/deleteTaskByID/" + taskId, {
+                            method: "DELETE",
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(newTaskData)
+                        })*/
                     }
              })
             setTasks((prevTasks) =>

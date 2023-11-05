@@ -33,9 +33,25 @@ function TaskCards(props) {
     }
     TaskCards.addTask = addTask;
 
+    /* newly implemented api removetask*/
     function removeTask (taskId) {
-        // removes task based on id
-        setTasks((prevTasks) => prevTasks.filter((task) => task._id !== taskId));
+        // Send a request to the API to delete the task by its ID
+        fetch(`/api/v1/tasks/deleteTaskByID/${taskId}`, {
+            method: 'DELETE',
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    // If the task was successfully deleted online, remove it locally
+                    setTasks((prevTasks) => prevTasks.filter((task) => task._id !== taskId));
+                } else {
+                    alert('Task deletion failed. Please try again.');
+                }
+            })
+            .catch((error) => {
+                console.error('An error occurred:', error);
+                alert('An error occurred while deleting the task. Please check your network connection and try again');
+            });
     }
     TaskCards.removeTask = removeTask;
 
@@ -135,15 +151,7 @@ function TaskCards(props) {
                             },
                             body: JSON.stringify(newTaskData)
                         })
-                        /* Start of DELETE integration -- UNDER CONSTRUCTION
-                        fetch(App.baseAPI + "/api/v1/tasks/deleteTaskByID/" + taskId, {
-                            method: "DELETE",
-                            headers: {
-                                'Accept': 'application/json',
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(newTaskData)
-                        })*/
+                      
                     }
              })
             setTasks((prevTasks) =>

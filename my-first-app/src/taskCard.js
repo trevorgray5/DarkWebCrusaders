@@ -56,6 +56,33 @@ function TaskCards(props) {
             tags: editedTags.split(',').map(tag => tag.trim()),
         };
 
+        const updatedTask = {
+            title: $('#boxTitleText').val(),
+            desc: $('#boxDescriptionText').val(),
+            dueDate: $('#boxDueDateText').val(),
+            tag: $('#boxTagsText').val().split(',').map(tag => tag.trim()),
+        };
+
+        fetch('/api/v1/tasks/updateTaskByID/${taskId}', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedTask)
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                } else {
+                    alert('Task update failed. Please try again.')
+                }
+            })
+            .catch(error => {
+                console.error('An error ocurred:', error);
+                alert('An error occurred while updating the task. Please check your network connection and try again');
+            });
+
+            
         const updatedTasks = tasks.map((task) => {
             if (task._id === taskId) {
                 return { ...task, ...updatedData };
@@ -67,9 +94,10 @@ function TaskCards(props) {
     }
     TaskCards.editTask = editTask;
 
-    function loadingData () {
+    /*function loadingData () {
         const [data, setData] = useState(null);
 
+        
         useEffect(() => {
             fetch(App.baseAPI + "/api/v1/tasks/getTasks")
             .then((response) => response.json())
@@ -87,7 +115,7 @@ function TaskCards(props) {
                 <img src="/TaskMaster_Logo.png" alt="Loading..." />
             </div>
         }
-    }
+    }*/
 
     //Constants for card Completion button
     const [isCompleted, setIsCompleted] = useState(false);
@@ -201,7 +229,6 @@ function TaskCards(props) {
                     <div className="accentLine" />
                 </div>
             ))}
-            <loadingData />
         </section>
     );
 }

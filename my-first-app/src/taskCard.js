@@ -55,34 +55,27 @@ function TaskCards(props) {
             desc: editedDesc,
             tags: editedTags.split(',').map(tag => tag.trim()),
         };
-
-        const updatedTask = {
-            title: $('#boxTitleText').val(),
-            desc: $('#boxDescriptionText').val(),
-            dueDate: $('#boxDueDateText').val(),
-            tag: $('#boxTagsText').val().split(',').map(tag => tag.trim()),
-        };
-
-        fetch('/api/v1/tasks/updateTaskByID/${taskId}', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(updatedTask)
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                } else {
-                    alert('Task update failed. Please try again.')
+        //The map lets us find the specific task to get the info that won't change such as status and complete
+        tasks.map((task) => {
+            if (task._id === taskId) {
+                let newTaskData = {
+                    'title': editedTitle,
+                    'desc': editedDesc,
+                    'dueDate': editedDueDate,
+                    "tags": editedTags.split(',').map(tag => tag.trim()),
+                    "status": task.status,
+                    'completed' : task.completed
                 }
-            })
-            .catch(error => {
-                console.error('An error ocurred:', error);
-                alert('An error occurred while updating the task. Please check your network connection and try again');
-            });
-
-            
+                fetch(App.baseAPI + "/api/v1/tasks/updateTaskByID/" + taskId, {
+                    method: "PUT",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(newTaskData)
+                })
+            }
+        })
         const updatedTasks = tasks.map((task) => {
             if (task._id === taskId) {
                 return { ...task, ...updatedData };
@@ -123,9 +116,7 @@ function TaskCards(props) {
         // Function to toggle completed status
         const toggleCompletion = (taskId) => {
             let newCompleted = null;
-            console.log("completed")
              tasks.map((task) => {
-                 console.log("completed")
                     if (task._id === taskId) {
                         newCompleted = !task.completed;
                         let newTaskData = {'title': task.title, 'desc': task.desc, 'dueDate': task.dueDate, "tags": task.tags, "status": task.status, 'completed' : newCompleted}

@@ -7,6 +7,7 @@ let newTask = {'id': 0, 'title': "Simple Task New", 'desc': "simple description"
 function TaskCards(props) {
 
     let [tasks, setTasks] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [isOpen, setIsOpen] = useState(false);
     const [currStyle, newStyle] = useState(false);
     const [initialLoad, setInitialLoad] = useState(true);
@@ -15,43 +16,60 @@ function TaskCards(props) {
         //nothing
     }
     const changeStyle = () => {
-        newStyle(!currStyle);           
+        newStyle(!currStyle);
     }
 
     function addTask(task){
-        // Increase the tasks' id by one to make each task unique
-        const newId = Math.max(...tasks.map((task) => task._id), 0) + 1;
-        // add task with new id to task array
-        const updatedTask = { ...newTask, id: newId, 
-                                          title: $('#boxTitleText').val(), 
-                                          desc: $('#boxDescriptionText').val(), 
-                                          dueDate : $('#boxDueDateText').val(),
-                                          tags : $('#boxTagsText').val().split(',').map(tag => tag.trim()),
-                                        };
-        // update tasks
-        setTasks((prevTasks) => prevTasks.concat(updatedTask));
+        let newTask = {
+            title: $('#boxTitleText').val(),
+            desc: $('#boxDescriptionText').val(),
+            dueDate : $('#boxDueDateText').val(),
+            tags : $('#boxTagsText').val().split(',').map(tag => tag.trim()),
+        }
+        fetch(App.baseAPI + "/api/v1/tasks/createTask", {
+            method: "POST",
+            body: JSON.stringify(newTask),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+            .then((response => response.json()))
+            .then(data => {
+                if (data.success) {
+                    // set task id from the id returned by the API
+                    const newId = data.insertedId;
+                    // add task with new id to task array
+                    const updatedTask = { ...newTask,
+                        _id: data.insertedId,
+                        title: newTask.title,
+                        desc: newTask.desc,
+                        dueDate: newTask.dueDate,
+                        tags: newTask.tags,
+                        status: "incomplete",
+                        completed: false
+                    };
+                    // update tasks
+                    setTasks((prevTasks) => prevTasks.concat(updatedTask));
+                }
+            })
     }
     TaskCards.addTask = addTask;
 
     /* newly implemented api removetask*/
     function removeTask (taskId) {
         // Send a request to the API to delete the task by its ID
-        fetch(`/api/v1/tasks/deleteTaskByID/${taskId}`, {
+        fetch(App.baseAPI + `/api/v1/tasks/deleteTaskByID/${taskId}`, {
             method: 'DELETE',
         })
             .then((response) => response.json())
             .then((data) => {
                 if (data.success) {
-                    // If the task was successfully deleted online, remove it locally
+                    // If the task was successfully deleted online, remove it locally <- this should be handled the other way around but is fine for school. -Justin
                     setTasks((prevTasks) => prevTasks.filter((task) => task._id !== taskId));
                 } else {
                     alert('Task deletion failed. Please try again.');
                 }
             })
-            .catch((error) => {
-                console.error('An error occurred:', error);
-                alert('An error occurred while deleting the task. Please check your network connection and try again');
-            });
     }
     TaskCards.removeTask = removeTask;
 
@@ -68,34 +86,27 @@ function TaskCards(props) {
             desc: editedDesc,
             tags: editedTags.split(',').map(tag => tag.trim()),
         };
-
-        const updatedTask = {
-            title: $('#boxTitleText').val(),
-            desc: $('#boxDescriptionText').val(),
-            dueDate: $('#boxDueDateText').val(),
-            tag: $('#boxTagsText').val().split(',').map(tag => tag.trim()),
-        };
-
-        fetch('/api/v1/tasks/updateTaskByID/${taskId}', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(updatedTask)
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                } else {
-                    alert('Task update failed. Please try again.')
+        //The map lets us find the specific task to get the info that won't change such as status and complete
+        tasks.map((task) => {
+            if (task._id === taskId) {
+                let newTaskData = {
+                    'title': editedTitle,
+                    'desc': editedDesc,
+                    'dueDate': editedDueDate,
+                    "tags": editedTags.split(',').map(tag => tag.trim()),
+                    "status": task.status,
+                    'completed' : task.completed
                 }
-            })
-            .catch(error => {
-                console.error('An error ocurred:', error);
-                alert('An error occurred while updating the task. Please check your network connection and try again');
-            });
-
-            
+                fetch(App.baseAPI + "/api/v1/tasks/updateTaskByID/" + taskId, {
+                    method: "PUT",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(newTaskData)
+                })
+            }
+        })
         const updatedTasks = tasks.map((task) => {
             if (task._id === taskId) {
                 return { ...task, ...updatedData };
@@ -107,38 +118,13 @@ function TaskCards(props) {
     }
     TaskCards.editTask = editTask;
 
-    /*function loadingData () {
-        const [data, setData] = useState(null);
-
-        
-        useEffect(() => {
-            fetch(App.baseAPI + "/api/v1/tasks/getTasks")
-            .then((response) => response.json())
-            .then((data) => {
-                setData(data);
-            })
-            .catch((error) => {
-                console.error('Error fetching data: ', error);
-            });
-        }, []);
-
-        if (data === null) {
-            return 
-            <div>
-                <img src="/TaskMaster_Logo.png" alt="Loading..." />
-            </div>
-        }
-    }*/
-
     //Constants for card Completion button
     const [isCompleted, setIsCompleted] = useState(false);
 
         // Function to toggle completed status
         const toggleCompletion = (taskId) => {
             let newCompleted = null;
-            console.log("completed")
              tasks.map((task) => {
-                 console.log("completed")
                     if (task._id === taskId) {
                         newCompleted = !task.completed;
                         let newTaskData = {'title': task.title, 'desc': task.desc, 'dueDate': task.dueDate, "tags": task.tags, "status": task.status, 'completed' : newCompleted}
@@ -171,6 +157,7 @@ function TaskCards(props) {
                     if ( data.length != null) {
                         setTasks(data)
                         setInitialLoad(false);
+                        setIsLoading(false);
                     } else {
                         //Do nothing grab probably failed due to pull limit due to using the free mongodb option
                         //This will essentially try again till the timeout is done
@@ -181,6 +168,39 @@ function TaskCards(props) {
 
     return (
         <section className="cardContainer">
+            <div className={`${isLoading ? 'LoadingScreen' : 'hideLoading'}`}>
+                <svg width={`${isLoading ? '100' : '0'}`} height={`${isLoading ? '100' : '0'}`} viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient x1="8.042%" y1="0%" x2="65.682%" y2="23.865%" id="a">
+                            <stop stop-color="#fff" stop-opacity="0" offset="0%"/>
+                            <stop stop-color="#fff" stop-opacity=".631" offset="63.146%"/>
+                            <stop stop-color="#fff" offset="100%"/>
+                        </linearGradient>
+                    </defs>
+                    <g fill="none" fill-rule="evenodd">
+                        <g transform="translate(1 1)">
+                            <path d="M36 18c0-9.94-8.06-18-18-18" id="Oval-2" stroke="url(#a)" stroke-width="2">
+                                <animateTransform
+                                    attributeName="transform"
+                                    type="rotate"
+                                    from="0 18 18"
+                                    to="360 18 18"
+                                    dur="0.9s"
+                                    repeatCount="indefinite" />
+                            </path>
+                            <circle fill="#fff" cx="36" cy="18" r="1">
+                                <animateTransform
+                                    attributeName="transform"
+                                    type="rotate"
+                                    from="0 18 18"
+                                    to="360 18 18"
+                                    dur="0.9s"
+                                    repeatCount="indefinite" />
+                            </circle>
+                        </g>
+                    </g>
+                </svg>
+            </div>
             {tasks.map(task => (
                 <div key={task._id} className={` ${task.completed ? 'completed completedBackground' : ''}`}>
                     {task.status == 'incomplete'?
@@ -218,12 +238,12 @@ function TaskCards(props) {
                                 ))}
                             </div>
                         </div>
-                        
+
                         {/* Add callback function to buttons below */}
                         <button className={currStyle ? "accentButton cardButton spaceButton" : "accentButton cardButton spaceButton"} onClick={() => {toggleCompletion(task._id); changeStyle();}}
                         style={{"marginLeft": "auto"}}>{task.completed ? "Uncomplete" : "Complete"}</button>
-                        
-                        
+
+
                         <button className="accentButton cardButton" onClick={() => removeTask(task._id)} style={{"marginRight": "50px"}}>Delete</button>
                     </div>:  <div className="card">
                         <p className="cardDueDate" style={{"text-decoration": "line-through", "color": "gray"}}>{task.dueDate}</p>

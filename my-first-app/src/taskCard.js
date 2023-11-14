@@ -6,7 +6,7 @@ let newTask = {'id': 0, 'title': "Simple Task New", 'desc': "simple description"
 
 function TaskCards(props) {
 
-    let [tasks, setTasks] = useState([]);
+    let [tasks, setTasks] = useState([newTask]);
     const [isLoading, setIsLoading] = useState(true);
     const [isOpen, setIsOpen] = useState(false);
     const [currStyle, newStyle] = useState(false);
@@ -65,11 +65,11 @@ function TaskCards(props) {
             .then((data) => {
                 if (data.success) {
                     // If the task was successfully deleted online, remove it locally <- this should be handled the other way around but is fine for school. -Justin
-                    setTasks((prevTasks) => prevTasks.filter((task) => task._id !== taskId));
                 } else {
                     alert('Task deletion failed. Please try again.');
                 }
             })
+        setTasks((prevTasks) => prevTasks.filter((task) => task._id !== taskId));
     }
     TaskCards.removeTask = removeTask;
 
@@ -155,6 +155,7 @@ function TaskCards(props) {
                 .then(response => response.json())
                 .then(data => {
                     if ( data.length != null) {
+                        setTasks([]);
                         setTasks(data)
                         setInitialLoad(false);
                         setIsLoading(false);

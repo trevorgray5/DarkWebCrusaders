@@ -6,7 +6,7 @@ const app = express();
 const port = 3000;
 
 let corsOptions = {
-    origin : ['http://localhost:3000', 'http://localhost:3001'],
+    origin : ['http://localhost:3000', 'http://localhost:3001', '*'],
 }
 app.use(cors(corsOptions))
 
@@ -57,6 +57,7 @@ app.get('/api/v1/tasks/getTasks', async (req, res) => {
         res.json(documents);
     }
     catch (err) {
+        console.log(err);
         res.status(500).json({ success: false, message: 'Error passing tasks', error: err });
     }
     finally {
@@ -77,6 +78,7 @@ app.get('/api/v1/tasks/getTaskByID/:taskID', async (req, res) => {
         }
     }
     catch (err) {
+        console.log(err);
         res.status(500).json({ success: false, message: 'Error getting task', error: err });
     }
     finally {
@@ -100,6 +102,7 @@ app.post('/api/v1/tasks/createTask', async (req, res) => {
         res.json({success: true, message: 'Task created successfully', insertedId: result.insertedId});
     }
     catch (err) {
+        console.log(err);
         res.status(500).json({ success: false, message: 'Error creating the task', error: err });
     }
     finally {
@@ -127,6 +130,7 @@ app.put('/api/v1/tasks/updateTaskByID/:taskID', async (req, res) => {
             res.status(404).json({ success: false, message: 'Task not found' });
         }
      } catch (err) {
+         console.log(err);
          res.status(500).json({ success: false, message: 'Error updating the task', error: err });
      } finally {
          await client.close();
@@ -148,6 +152,7 @@ app.delete('/api/v1/tasks/deleteTaskByID/:taskID', async (req, res) => {
             res.status(404).json({ success: false, message: 'Task not found' });
         }
     } catch (err) {
+        console.log(err);
         res.status(500).json({ success: false, message: 'Error deleting the task', error: err });
     } finally {
         await client.close();

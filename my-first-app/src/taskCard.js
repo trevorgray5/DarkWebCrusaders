@@ -211,7 +211,7 @@ function TaskCards(props) {
                                 <button className="accentButton cardButton" onClick={() => editTask(task._id)} style={{"marginRight": "0px"}} >Save</button>
                                 <div className="editFields">
                                     <input className="editInput" type="text" value={editedTitle} onChange={(e) => setEditedTitle(e.target.value)} />
-                                    <input className="editInput" type="text" value={editedDueDate} onChange={(e) => setEditedDueDate(e.target.value)} />
+                                    <input className="editInput" type="date" value={editedDueDate} onChange={(e) => setEditedDueDate(e.target.value)} />
                                     <input className="editInput" type="text" value={editedDesc} onChange={(e) => setEditedDesc(e.target.value)}  />
                                     <input className="editInput" type="text" value={editedTags} onChange={(e) => setEditedTags(e.target.value)} />
                                 </div>

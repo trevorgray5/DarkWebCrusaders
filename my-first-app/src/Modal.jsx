@@ -26,7 +26,7 @@ import TaskCards from "./taskCard";
                     className={styles.boxText} />
                     <br />
                     <label htmlFor="dueDate" className={styles.labels}>Due Date</label>
-                    <input type="text" id="boxDueDateText"
+                    <input type="date" id="boxDueDateText"
                     className={styles.boxText} />
                     <br />
                     <label htmlFor="boxTagsText" className={styles.labels}>Tags</label>

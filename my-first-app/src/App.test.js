@@ -57,3 +57,35 @@ describe('CompleteButton component', () => {
     expect(mockOnClick).toHaveBeenCalled();
   });
 });
+
+// Edit Button component Test
+describe('EditButton component', () => {
+  it('Edit click triggers click event', async () => {
+    // Arrange
+    const mockOnClick = jest.fn();
+    render(<App />);
+    await screen.findByText("Edit"); // Wait for the Edit button to be rendered
+
+    // Act
+    fireEvent.click(screen.getByText("Edit"));
+
+    // Assert
+    expect(mockOnClick).toHaveBeenCalled(); // If the Edit button should trigger some function, make sure to test that function is called.
+  });
+});
+
+// Save Button component Test
+describe('SaveButton component', () => {
+  it('Save click triggers click event', async () => {
+    // Arrange
+    const mockOnClick = jest.fn();
+    render(<App />);
+    await screen.findByText("Save"); // Wait for the Save button to be rendered
+
+    // Act
+    fireEvent.click(screen.getByText("Save"));
+
+    // Assert
+    expect(mockOnClick).toHaveBeenCalled(); 
+  });
+});

@@ -26,12 +26,12 @@ function App() {
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
-        <title>Task Master</title>
+        <title>TodoFusion</title>
       </header>
       <div className="accentBackDrop"></div>
       <div className="bodyWorkAround">
         <section className="titleSection">
-            <h1 className="appTitle">T a s k  M a s t e r</h1>
+            <h1 className="appTitle">T o D o F u s i o n</h1>
         </section>
         <TaskCards />
 

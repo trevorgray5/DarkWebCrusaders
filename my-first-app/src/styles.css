@@ -162,6 +162,7 @@
     align-items: center;
     justify-content: center;
     margin-left: 10px;
+    margin-right: 5px;
 }
 
 .accentLine {
@@ -194,9 +195,7 @@
 
 .editView{
     display: flex;
-    height: 50px;
     margin-left: 25px;
-    width: 250px;
     align-items: center;
 }
 
@@ -204,6 +203,8 @@
     display: flex;
     flex-direction: column;
     margin-left: 25px;
+    min-width: 180px;
+    min-height: 96px;
 }
 
 .editInput {
@@ -289,5 +290,14 @@
     }
     .cardTitle::after{
         width: 100%;
+    }
+    .editView {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+    }
+    .editFields {
+        margin: 0;
     }
 }
